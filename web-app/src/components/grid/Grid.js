@@ -4,6 +4,9 @@
 import { Card } from '@mui/material';
 import React from 'react';
 
+window.addEventListener('resize', () => {window.location.reload()});
+
+
 export function Grid({ rows, columns, gap = '10px', children })
 {
     if( document.body.clientHeight > document.body.clientWidth)

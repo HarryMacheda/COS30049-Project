@@ -1,7 +1,26 @@
-import {CardContent, Typography, Select, MenuItem, InputLabel, FormControl, TextField, Box} from '@mui/material';
+import {CardContent, Typography, Select, MenuItem, InputLabel, FormControl, TextField, Box,Stack, Skeleton} from '@mui/material';
+import {useState, useEffect} from 'react'
+import {SuburbSearch} from '../components/suburbs/SuburbSearch';
+
+
 export function Filter() 
 {
-    return (
+    const [isLoading, setLoading] = useState(true)
+    const [suburbs, setSuburbs] = useState(null);
+    const [state, setState] = useState("")
+
+    useEffect(() => {
+      fetch('/suburbs.json')
+      .then(response => response.json())
+      .then(jsonData => {setSuburbs(jsonData); setLoading(false);})
+      .catch(error => console.error('Error loading data:', error));
+    },[]);
+
+
+
+    if(!isLoading)
+    {
+      return (
         <CardContent>
           <Typography variant="h5">Filter</Typography>
           <br />
@@ -18,19 +37,6 @@ export function Filter()
               <TextField label="Parking spaces" type="number"/>
             </FormControl>
             <FormControl fullWidth sx={{ mb: 2 }}>
-              <InputLabel id="label-state">State</InputLabel>
-              <Select label="State" value={"ACT"} labelId={"label-state"}>
-                <MenuItem value={"ACT"}>Australian Capital Territory</MenuItem>
-                <MenuItem value={"NSW"}>New South Wales</MenuItem>
-                <MenuItem value={"NT"}>Northern Territory</MenuItem>
-                <MenuItem value={"QLD"}>Queensland</MenuItem>
-                <MenuItem value={"SA"}>South Austalia</MenuItem>
-                <MenuItem value={"TAS"}>Tasmania</MenuItem>
-                <MenuItem value={"VIC"}>Victoria</MenuItem>
-                <MenuItem value={"WA"}>Western Australia</MenuItem>
-              </Select>
-            </FormControl>
-            <FormControl fullWidth sx={{ mb: 2 }}>
               <InputLabel id="label-type">Property Type</InputLabel>
               <Select label={"Property Type"} value={0} labelId={"label-type"}>
                 <MenuItem value={0}>House</MenuItem>
@@ -42,8 +48,46 @@ export function Filter()
             </FormControl>
           </Box>
           <hr />
-
+          <br />
+          <FormControl fullWidth sx={{ mb: 2 }}>
+              <InputLabel id="label-state">State</InputLabel>
+              <Select label="State" value={state} labelId={"label-state"} onChange={(event) => setState(event.target.value)}>
+                <MenuItem value={"ACT"}>Australian Capital Territory</MenuItem>
+                <MenuItem value={"NSW"}>New South Wales</MenuItem>
+                <MenuItem value={"NT"}>Northern Territory</MenuItem>
+                <MenuItem value={"QLD"}>Queensland</MenuItem>
+                <MenuItem value={"SA"}>South Austalia</MenuItem>
+                <MenuItem value={"TAS"}>Tasmania</MenuItem>
+                <MenuItem value={"VIC"}>Victoria</MenuItem>
+                <MenuItem value={"WA"}>Western Australia</MenuItem>
+              </Select>
+          </FormControl>
+          <FormControl fullWidth sx={{ mb: 2 }}>
+            <SuburbSearch options={suburbs} state={state}/>
+          </FormControl>
         </CardContent>
+      )
+    }
+
+    //Placeholder when loading
+    return (
+      <CardContent>
+        <Skeleton variant="text" sx={{ fontSize: '2rem' }} animation={"wave"}/>
+        <br />
+        <Skeleton variant="text" sx={{ fontSize: '1.5rem' }} animation={"wave"}/>
+        <hr />
+        <Stack spacing={1}>
+          <Skeleton variant="rounded" height={60} animation={"wave"}/>
+          <Skeleton variant="rounded" height={60} animation={"wave"}/>
+          <Skeleton variant="rounded" height={60} animation={"wave"}/>
+          <Skeleton variant="rounded" height={60} animation={"wave"}/>
+        </Stack >
+        <hr />
+        <br />
+        <Skeleton variant="rounded" height={60} animation={"wave"}/>
+        <br />
+        <Skeleton variant="rounded" height={60} animation={"wave"}/>
+      </CardContent>
     )
 }
 

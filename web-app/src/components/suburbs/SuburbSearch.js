@@ -16,21 +16,25 @@ export function SuburbSearch({ options, state })
               options={options}
               getOptionLabel={(option => option.Suburb)}
               filterOptions={(options = [], { inputValue }) => {
-                        //user hasnt searched return the first [limit] options
-                        if (inputValue == "" || inputValue.length < 3)
-                            return options.slice(0, limit)
+                        let results = options
 
-                        //filter options based on the input
-                        let results = options.filter((option) =>
-                            option?.Suburb?.toLowerCase().includes(inputValue.toLowerCase())
-                        )
-
+                        //filter options based on selcted state
                         if(state != "")
                         {
                             results = results.filter((option) =>
                                 option?.State?.toLowerCase() == state.toLowerCase()
                             )
                         }
+
+                        //filter options based on the input
+                        if (inputValue == "" || inputValue.length < 3)
+                            //user hasn't searched return the first [limit] options
+                            return results.slice(0, limit)
+                        else 
+                            results = results.filter((option) =>
+                                option?.Suburb?.toLowerCase().includes(inputValue.toLowerCase())
+                            )
+
                         return results;
                     }
                 }

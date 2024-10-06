@@ -19,3 +19,6 @@ out
 # Nuxt.js build / generate output
 .nuxt
 dist
+
+# python
+_pycache_

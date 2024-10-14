@@ -15,6 +15,8 @@ const LIGHT = createTheme({
       },
       background: {
         paper: "#F3F1DC",
+        paperDark: "#D6C8AF",
+        paperDarker: "#C8B493",
         default: "#12182B"
       }
     },
@@ -35,7 +37,6 @@ const DARK = createTheme({
 export function ThemeController({children})
 {
     const [theme, setTheme] = useState(LIGHT);
-    console.log(theme);
 
     return (
         <ThemeProvider theme={theme}> 

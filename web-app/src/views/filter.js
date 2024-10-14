@@ -2,21 +2,30 @@ import {CardContent, Typography, Select, MenuItem, InputLabel, FormControl, Text
 import {useState, useEffect} from 'react'
 import {SuburbSearch} from '../components/suburbs/SuburbSearch';
 import Divider from '@mui/material/Divider';
+import APIClient from '../api/client'
 
-
-export function Filter() 
+export function Filter({filter, onChange}) 
 {
     const [isLoading, setLoading] = useState(true)
-    const [suburbs, setSuburbs] = useState(null);
+    const [suburbs, setSuburbs] = useState("");
     const [state, setState] = useState("")
+    const [propertyType, setPropertyType] = useState("")
+
+    const LoadSuburbs = async () => {
+      let suburbData = await APIClient.get("/suburbs");
+      setSuburbs(suburbData);
+      setLoading(false);
+    }
 
     useEffect(() => {
-      fetch('/suburbs.json')
-      .then(response => response.json())
-      .then(jsonData => {setSuburbs(jsonData); setLoading(false);})
-      .catch(error => console.error('Error loading data:', error));
-    },[]);
+      LoadSuburbs()
+    },[filter]);
 
+    const handlechange = (stateHandler, property) => (value) => {
+      stateHandler(value);
+      const newfilter = { ...filter, [property]: value }; //need to create a new object other react wont rerender
+      onChange(newfilter);
+    }
 
 
     if(!isLoading)
@@ -41,7 +50,7 @@ export function Filter()
             </FormControl>
             <FormControl fullWidth sx={{ mb: 2 }}>
               <InputLabel id="label-type">Property Type</InputLabel>
-              <Select label={"Property Type"} value={} labelId={"label-type"}>
+              <Select label={"Property Type"} value={propertyType} labelId={"label-type"} onChange={(event) => handlechange(setPropertyType, "Type")(event.target.value)}>
                 <MenuItem value={0}>House</MenuItem>
                 <MenuItem value={1}>Townhouse</MenuItem>
                 <MenuItem value={2}>Appartment</MenuItem>
@@ -54,7 +63,7 @@ export function Filter()
           <br />
           <FormControl fullWidth sx={{ mb: 2 }}>
               <InputLabel id="label-state">State</InputLabel>
-              <Select label="State" value={state} labelId={"label-state"} onChange={(event) => setState(event.target.value)}>
+              <Select label="State" value={state} labelId={"label-state"} onChange={(event) => handlechange(setState,"State")(event.target.value)}>
                 <MenuItem value={"ACT"}>Australian Capital Territory</MenuItem>
                 <MenuItem value={"NSW"}>New South Wales</MenuItem>
                 <MenuItem value={"NT"}>Northern Territory</MenuItem>
@@ -66,7 +75,7 @@ export function Filter()
               </Select>
           </FormControl>
           <FormControl fullWidth sx={{ mb: 2 }}>
-            <SuburbSearch options={suburbs} state={state}/>
+            <SuburbSearch options={suburbs} state={state} filter={filter} onChange={onChange}/>
           </FormControl>
         </CardContent>
       )

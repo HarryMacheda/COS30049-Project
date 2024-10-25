@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { Table, TableHead, TableRow, TableCell, styled, TableContainer } from "@mui/material"
+import { Table, TableHead, TableRow, TableCell, styled, TableContainer, TableBody } from "@mui/material"
 import { Skeleton } from "@mui/material"
 import APIClient from '../api/client'
 
@@ -21,7 +21,13 @@ export function DataTable({filter})
 
     const LoadData = async () => {
 
-        let data = await APIClient.get("/data/suburb" + (filter.Suburb ? "/" + filter.Suburb : "")); 
+        let data = await APIClient.get("/data/suburb" + (filter.Suburb ? "/" + filter.Suburb.Suburb : "")); 
+        //filter data further
+        if(filter.Type || filter.Type == 0){
+            data = data.filter((element) => element.Type == filter.Type);
+        }
+
+
         setData(data);
     }
 
@@ -39,7 +45,7 @@ export function DataTable({filter})
     if(data.length == 0) return (<>No data available for selected filters.</>)    
 
     return (
-        <TableContainer>
+        <TableContainer style={{width: "100%", overflow: "auto"}}>
             <Table stickyHeader >
                 <TableHead style={{width: "100%"}}> 
                     <TableRow style={{width: "100%"}}>
@@ -48,15 +54,17 @@ export function DataTable({filter})
                         ))}
                     </TableRow>
                 </TableHead>
-                {data.map((x,index) => (
-                    <StyledTableRow>
-                        {Object.keys(data[index]).map((x,index) => (
-                            <TableCell key={index} style={{ textAlign: "center", padding: "8px"}}>
-                                {data[index][x]}
-                            </TableCell>
-                        ))}
-                    </StyledTableRow>
-                ))}
+                <TableBody>
+                    {data.map((y,i) => (
+                        <StyledTableRow key={"row_" + i}>
+                            {Object.keys(y).map((x,j) => (
+                                <TableCell key={i + "_" + j} style={{ textAlign: "center", padding: "8px"}}>
+                                    {y[x]}
+                                </TableCell>
+                            ))}
+                        </StyledTableRow>
+                    ))}
+                </TableBody>
             </Table>
         </TableContainer>
     )
@@ -71,17 +79,19 @@ function SuspendedTable({collums, rows})
             <TableHead style={{width: "100%"}}> 
                 <TableRow style={{width: "100%"}}>
                     {[...Array(collums)].map((_, index) => (
-                        <StyledTableHeadCell key={index} style={{width: `${100 / collums}%`}}><Skeleton sx={{ fontSize: '2rem' }} animation={"wave"} /></StyledTableHeadCell>
+                        <StyledTableHeadCell key={"suspend_" + index} style={{width: `${100 / collums}%`}}><Skeleton key={"suspend_" + index + "_skeleton"} sx={{ fontSize: '2rem' }} animation={"wave"} /></StyledTableHeadCell>
                     ))}
                 </TableRow>
             </TableHead>
-                {[...Array(rows)].map((_, index) => (
-                    <StyledTableRow>
-                        {[...Array(collums)].map((_, index) => (
-                            <TableCell key={index} style={{ width: `${100 / collums}%`, textAlign: "center", padding: "8px" }}><Skeleton sx={{ fontSize: '2rem' }} animation={"wave"} /></TableCell>
+            <TableBody>
+                {[...Array(rows)].map((_, i) => (
+                    <StyledTableRow key={"row_" + i}>
+                        {[...Array(collums)].map((_, j) => (
+                            <TableCell key={"suspend_" + i + "_" + j} style={{ width: `${100 / collums}%`, textAlign: "center", padding: "8px" }}><Skeleton sx={{ fontSize: '2rem' }} animation={"wave"} /></TableCell>
                         ))}
                     </StyledTableRow>
                 ))}
+            </TableBody>
         </Table>
     )
 }

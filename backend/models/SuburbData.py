@@ -1,5 +1,6 @@
 from utility.data import LoadDataTable
 from pydantic import BaseModel
+import joblib
 
 #Suburb model
 class suburb(BaseModel):
@@ -35,4 +36,6 @@ class SuburbData:
 
 
         self.data = data.to_dict(orient="records")
+
+        joblib.dump(self, 'suburb_data.pkl')
         SuburbData.instance = self

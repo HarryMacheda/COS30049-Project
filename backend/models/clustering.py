@@ -4,7 +4,7 @@ from pydantic import BaseModel
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 from fastapi import HTTPException
-
+import joblib
 
 #regression model
 class clusteringPrediction(BaseModel):
@@ -64,6 +64,7 @@ class Cluster():
         for obj, value in zip(self.clusters, names):
             obj['name'] = value
 
+        joblib.dump(self, 'clustering_model.pkl')
         Cluster.instance = self
 
     # predict the cluster for a give input

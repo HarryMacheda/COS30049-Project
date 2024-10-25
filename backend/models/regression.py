@@ -3,6 +3,7 @@ import pandas as pd
 from pydantic import BaseModel
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import StandardScaler
+import joblib
 
 #regression model
 class regressionPrediction(BaseModel):
@@ -33,6 +34,7 @@ class regression():
         # create a train the model
         self.model = LinearRegression()
         self.model.fit(scaled, self.data["Price"])
+        joblib.dump(self, 'regression_model.pkl')
         regression.instance = self
 
     def predict(self, input):

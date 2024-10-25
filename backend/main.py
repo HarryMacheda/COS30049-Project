@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from controllers import suburbs,clustering,regression,data
 from models import SuburbData
 import os
+import joblib
 
 app = FastAPI()
 
@@ -15,9 +16,12 @@ app.add_middleware(
 )
 # Set up required variables
  
-subrubData = SuburbData.SuburbData(os.path.dirname(os.path.abspath(__file__)) + "/data/suburbs.csv")
-regressionModel = regression.regression(os.path.dirname(os.path.abspath(__file__)) + "/data/data.csv")
-clusterModel = clustering.Cluster(os.path.dirname(os.path.abspath(__file__)) + "/data/data.csv")
+#subrubData = SuburbData.SuburbData(os.path.dirname(os.path.abspath(__file__)) + "/data/suburbs.csv")
+SuburbData.SuburbData.instance =  joblib.load("suburb_data.pkl")
+#regressionModel = regression.regression(os.path.dirname(os.path.abspath(__file__)) + "/data/data.csv")
+regression.regression.instance = joblib.load("regression_model.pkl")
+#clusterModel = clustering.Cluster(os.path.dirname(os.path.abspath(__file__)) + "/data/data.csv")
+clustering.Cluster.instance = joblib.load("clustering_model.pkl")
 
 
 # Define the routes

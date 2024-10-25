@@ -29,6 +29,10 @@ export default class APIClient {
 
             const response = await fetch(API_URL + path, {
                 method: "post",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
                 body: JSON.stringify(body)
             });
 

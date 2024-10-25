@@ -1,0 +1,18 @@
+.scarcityIndicator {
+    height: 10px;
+    width: 100%;
+    background: linear-gradient(to right, #D13636, #D19D10, #368248);
+    border-radius: 5px;
+}
+
+.floatLeft {
+    float:left;
+}
+
+.floatRight {
+    float:right;
+}
+
+.PriceDisplay {
+    font-weight: bolder;
+}

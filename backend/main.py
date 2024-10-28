@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from api import models, clustering, regression, suburbs
+from routes import clustering, regression, suburbs
 from models.regression import Regression
 from models.clustering import Clustering
 from models.suburb_data import SuburbData

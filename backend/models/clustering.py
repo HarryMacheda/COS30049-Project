@@ -1,25 +1,13 @@
-from utility.data import LoadDataTable
+from services.data import LoadDataTable
+from schemas.clustering import ClusteringPredictionResponse
 import pandas as pd
-from pydantic import BaseModel
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 from fastapi import HTTPException
 import joblib
 
-#regression model
-class clusteringPrediction(BaseModel):
-    Prediction: str
 
-class clusteringInput(BaseModel):
-    Longitude: float
-    Latitude: float
-    Beds: int
-    Baths: int
-    Parking: int
-    Type: int
-
-
-class Cluster():
+class Clustering:
 
     instance = None
 
@@ -65,15 +53,15 @@ class Cluster():
             obj['name'] = value
 
         joblib.dump(self, 'clustering_model.pkl')
-        Cluster.instance = self
+        Clustering.instance = self
 
-    # predict the cluster for a give input
+    # Predict the cluster for a give input
     def predict(self, input):
-        # get the cluster
+        # Get the cluster
         prediction = self.model.predict(self.scaler.transform(pd.DataFrame([input.dict()])))
         for cluster in self.clusters:
-            # find the name for the give cluster
+            # Find the name for the give cluster
             if cluster.get('cluster') == prediction:
-                return clusteringPrediction(Prediction = (cluster.get('name')))
+                return ClusteringPredictionResponse(Prediction = (cluster.get('name')))
             
         raise HTTPException(status_code=500, detail="Could not find cluster for prediction")

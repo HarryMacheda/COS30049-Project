@@ -3,15 +3,17 @@ import pandas as pd
 
 # Utility file to load data from csvs
 
-def LoadDataTable(path, features = []):
+def LoadDataTable(path, features=None):
     # Load the data
-    data = pd.read_csv(path) 
+    if features is None:
+        features = []
+    data = pd.read_csv(path)
 
     # Do some cleaning
     data = data.drop_duplicates()
     data = data.dropna()
 
-    ## strip whitespace
+    # strip whitespace
     data.columns = data.columns.str.strip()  
     data = data.applymap(lambda x: x.strip() if isinstance(x, str) else x)
 

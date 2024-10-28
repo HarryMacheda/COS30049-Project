@@ -15,8 +15,7 @@ async def clustering_predict(features: ClusteringPredictionRequest):
 
 @router.get("/description", response_model=str)
 async def clustering_description():
-    description = "A clustering model trained on housing data that \
-                    groups properties into clusters based on their \
-                    features, allowing for the identification of similar \
-                    properties within each cluster for targeted analysis."
+    description = ("A clustering model trained on housing data that groups properties into clusters based on their "
+                   "features, allowing for the identification of similar properties within each cluster for targeted "
+                   "analysis.")
     return description

@@ -15,7 +15,6 @@ async def regression_predict(features: RegressionPredictionRequest):
 
 @router.get("/description", response_model=str)
 async def regression_description():
-    description = "A linear regression model trained on real estate \
-                    data capable of estimating the listing price of a \
-                    house based on the house's features."
+    description = ("A linear regression model trained on real estate data capable of estimating the listing price of a "
+                   "house based on the house's features.")
     return description

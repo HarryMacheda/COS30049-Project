@@ -21,7 +21,7 @@ export function DataTable({filter})
 
     const LoadData = async () => {
 
-        let data = await APIClient.get("/data/suburb" + (filter.Suburb ? "/" + filter.Suburb.Suburb : "")); 
+        let data = await APIClient.get("/suburbs" + (filter.Suburb ? "/" + filter.Suburb.Suburb : "")); 
         //filter data further
         if(filter.Type || filter.Type == 0){
             data = data.filter((element) => element.Type == filter.Type);

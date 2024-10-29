@@ -33,7 +33,9 @@ const DARK = createTheme({
     },
   });
 
-
+/*  This controls the theme for the website
+    Currently we only have one theme this is for future development
+*/ 
 export function ThemeController({children})
 {
     const [theme, setTheme] = useState(LIGHT);

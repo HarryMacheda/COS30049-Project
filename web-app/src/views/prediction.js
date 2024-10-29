@@ -3,6 +3,7 @@ import APIClient from '../api/client'
 import { Slider } from "@mui/material";
 import styles from './prediction.module.css'
 
+// Utility function to convert large numbers into human-readable formats 
 function getPrettyNumber(number){
     const integer = Math.floor(number);
     if (integer >= 1_000_000_000) {
@@ -18,15 +19,16 @@ function getPrettyNumber(number){
   }
 }
 
-
-
+// PredictionView component for displaying property price prediction and scarcity level
 export function PredictionView({ filter })
 {
+    // State for regression (price prediction) and clustering (scarcity level)
     const [regression, setRegression] = useState(null);
     const [clustering, setClustering] = useState(null);
 
+    // Function to load predictions based on filter input
     const LoadPrediction = async () => {
-        //Load the prediction based on the filter 
+        // Prepare the input for prediction API using values from the filter
         const input = {
             Longitude: filter.Suburb.Longitude,
             Latitude: filter.Suburb.Latitude,
@@ -36,12 +38,14 @@ export function PredictionView({ filter })
             Type: filter.Type ? filter.Type : 0
         }
 
-       //get predictions
+       // Fetch price prediction from regression API
         APIClient.post("/regression/predict", input).then((response) => {
             setRegression(response.Prediction);
         });
+        
+        // Fetch scarcity level from clustering API
         APIClient.post("/clustering/predict", input).then((response) => {
-            //get the ranking of the cluster
+            // Define scarcity ranking order
             const clusters = {
                 "Everywhere":0,
                 "Abundant":1,
@@ -60,6 +64,7 @@ export function PredictionView({ filter })
 
     }
 
+    // Load predictions when a valid filter with a suburb is provided
     useEffect(() => {
         if(filter != undefined  && filter != null && filter.Suburb != undefined && filter.Suburb != null)
         {
@@ -67,20 +72,23 @@ export function PredictionView({ filter })
         }
       },[filter]);
 
-
+    // Display message if no suburb information is available in the filter
     if (filter.Suburb == undefined || filter.Suburb == null){
         return <>Unable to make prediction for the given filter. Please enter a Suburb.</>
     }
+    // Display message if predictions could not be retrieved
     if (regression == null && clustering == null){
         return <>Unable to make prediction for the given filter. Try updating the filter to re-predict.</>
     }
 
+    // Render price prediction and scarcity level
     return (
         <>
             {regression && 
             <p className={styles.PriceDisplay}>${getPrettyNumber(regression)}</p>}
             {clustering && <div key={clustering.cluster}>
                 <span>{clustering.cluster}</span>
+                {/* Slider representing the scarcity level (disabled for display purposes) */}
                 <Slider defaultValue={clustering.order} step={1} marks min={0} max={9} disabled />
                 <div className={styles.scarcityIndicator}></div>
                 <span className={styles.floatLeft}>&lt;----more common</span> <span className={styles.floatRight}>Less common----&gt;</span>

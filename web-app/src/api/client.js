@@ -2,6 +2,7 @@
 // Url for the fast api server running the backend
 const API_URL = "http://127.0.0.1:8000"
 
+//This is a class used to communicate with backend
 export default class APIClient {
 
     //Wrapper functions over the fetch api
@@ -29,6 +30,7 @@ export default class APIClient {
 
             const response = await fetch(API_URL + path, {
                 method: "post",
+                // sets some default headers to ensure format is correct
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'

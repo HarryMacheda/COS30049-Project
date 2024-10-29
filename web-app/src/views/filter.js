@@ -5,6 +5,7 @@ import Divider from '@mui/material/Divider';
 import APIClient from '../api/client';
 
 export function Filter({ filter, onChange }) {
+  // State to manage values for various filters like Beds, Baths, etc.
   const [stateValues, setStateValues] = useState({
     Beds: 0,
     Baths: 0,
@@ -15,21 +16,25 @@ export function Filter({ filter, onChange }) {
     nonce: new Date().getTime(),
   });
   
+  // State to manage loading status
   const [isLoading, setLoading] = useState(true);
 
+  // Function to fetch suburb data from API and update state
   const loadSuburbs = async () => {
     const suburbData = await APIClient.get("/suburbs");
     setStateValues((prevState) => ({
       ...prevState,
       suburbs: suburbData
     }));
-    setLoading(false);
+    setLoading(false); // Set loading to false after data is fetched
   };
 
+  // useEffect hook to load suburbs when component mounts or filter changes
   useEffect(() => {
     loadSuburbs();
   }, [filter]);
 
+  // Function to handle changes in filter fields
   const handleChange = (property) => (event) => {
     const value = event.target.value;
     setStateValues((prevState) => ({
@@ -37,9 +42,10 @@ export function Filter({ filter, onChange }) {
       [property]: value
     }));
     const newFilter = { ...filter, [property]: value };
-    onChange(newFilter);
+    onChange(newFilter); // Trigger the onChange callback to update the parent component
   };
 
+  // Function to clear all filters and reset to initial state
   const clearFilter = () => {
     const newFilter = {...{...stateValues,
       Beds: 0,
@@ -50,9 +56,10 @@ export function Filter({ filter, onChange }) {
       nonce: new Date().getTime(),
     }}
     setStateValues(newFilter);
-    onChange(newFilter);
+    onChange(newFilter); // Trigger the onChange callback to update the parent component
   };
 
+  // Render the form only if not loading
   if (!isLoading) {
     return (
       <CardContent>
@@ -65,6 +72,7 @@ export function Filter({ filter, onChange }) {
         </Divider>
         <br />
         <Box>
+          {/* Input for selecting the number of bedrooms */}
           <FormControl fullWidth sx={{ mb: 2 }}>
             <TextField
               label="Bedrooms"
@@ -73,6 +81,7 @@ export function Filter({ filter, onChange }) {
               onChange={handleChange("Beds")}
             />
           </FormControl>
+          {/* Input for selecting the number of bathrooms */}
           <FormControl fullWidth sx={{ mb: 2 }}>
             <TextField
               label="Bathrooms"
@@ -81,6 +90,7 @@ export function Filter({ filter, onChange }) {
               onChange={handleChange("Baths")}
             />
           </FormControl>
+          {/* Input for selecting the number of parking spaces */}
           <FormControl fullWidth sx={{ mb: 2 }}>
             <TextField
               label="Parking spaces"
@@ -89,6 +99,7 @@ export function Filter({ filter, onChange }) {
               onChange={handleChange("Parks")}
             />
           </FormControl>
+          {/* Dropdown for selecting property type */}
           <FormControl fullWidth sx={{ mb: 2 }}>
             <InputLabel id="label-type">Property Type</InputLabel>
             <Select
@@ -109,6 +120,7 @@ export function Filter({ filter, onChange }) {
           Location Details
         </Divider>
         <br />
+        {/* Dropdown for selecting the state */}
         <FormControl fullWidth sx={{ mb: 2 }}>
           <InputLabel id="label-state">State</InputLabel>
           <Select
@@ -127,6 +139,7 @@ export function Filter({ filter, onChange }) {
             <MenuItem value={"WA"}>Western Australia</MenuItem>
           </Select>
         </FormControl>
+        {/* Suburb search component */}
         <FormControl fullWidth sx={{ mb: 2 }}>
           <SuburbSearch
             options={stateValues.suburbs}
@@ -137,6 +150,7 @@ export function Filter({ filter, onChange }) {
           />
         </FormControl>
         <br />
+        {/* Button to clear all filter inputs */}
         <Button variant="contained" onClick={clearFilter}>
           Clear Filter
         </Button>
@@ -144,7 +158,7 @@ export function Filter({ filter, onChange }) {
     );
   }
 
-  // Placeholder when loading
+  // Placeholder layout displayed while loading suburb data
   return (
     <CardContent>
       <Skeleton variant="text" sx={{ fontSize: '2rem' }} animation={"wave"} />

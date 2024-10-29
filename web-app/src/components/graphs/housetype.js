@@ -12,6 +12,7 @@ import {
   } from "chart.js";
 import { Bar } from 'react-chartjs-2';
 
+// Need to register the components chart js uses
 ChartJS.register(
     CategoryScale,
     LinearScale,
@@ -21,6 +22,7 @@ ChartJS.register(
     Legend
   );
 
+// enum for the different options we will check
 const HOUSE_TYPES = 
     {
         0: "House",
@@ -30,7 +32,10 @@ const HOUSE_TYPES =
         4: "Other",
     }
 
-
+/*  This is the graph that displays different bed options
+    IT goes through the enum and makes predictions
+    It then populates the graph with those data points
+*/
 export function HouseTypeGraph({filter}){
     const [data, setData] = useState(null);
 
@@ -68,8 +73,12 @@ export function HouseTypeGraph({filter}){
         {
             getAllPredictions();
         }
+        else {
+            setData(null);
+        }
     },[filter])
 
+    // if we havent load any data show a loading animation
     if(data == null){
         return <>
              Enter a suburb to generate results...

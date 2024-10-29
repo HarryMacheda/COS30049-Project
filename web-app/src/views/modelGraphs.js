@@ -5,6 +5,10 @@ import { HouseTypeGraph } from '../components/graphs/housetype'
 import { HouseBedsGraph } from '../components/graphs/housebeds'
 import { HouseParkingGraph } from '../components/graphs/houseparking'
 
+/*  This is a wrapper for all the graphs
+    It contols the layout based on a grid
+    The actuall graphs are handled in seperate files
+*/
 export default function ModelGraphs({filter, isLandscape})
 {
     return (

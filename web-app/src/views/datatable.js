@@ -3,24 +3,28 @@ import { Table, TableHead, TableRow, TableCell, styled, TableContainer, TableBod
 import { Skeleton } from "@mui/material"
 import APIClient from '../api/client'
 
+
+/*
+    Theses are how stylings are applied to table elements
+*/
 const StyledTableHeadCell = styled(TableCell)(({ theme }) => ({
     backgroundColor: theme.palette.background.paperDarker,
     textAlign: "center", 
     padding: "8px"
 }))
-
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
         backgroundColor: theme.palette.background.paperDark,
       },
 }))
 
+/* This is the data table view, this displays actual data we used to train the model*/
 export function DataTable({filter}) 
 {
     const [data, setData] = useState(null)
 
     const LoadData = async () => {
-
+        // Load the data from the backend
         let data = await APIClient.get("/suburbs" + (filter.Suburb ? "/" + filter.Suburb.Suburb : "")); 
         //filter data further
         if(filter.Type){
@@ -42,19 +46,27 @@ export function DataTable({filter})
         setData(data);
     }
 
+    /* use effect to update teh data when the filter changes
+       check if the user has selected a suburb since we dont assume a default for them */
     useEffect(() => {
         if(filter.Suburb != undefined && filter.Suburb != null){
             LoadData();
         }
         else {
-            setData([])
+            setData(null)
         }
     },[filter]);
 
+    // If theres no data then have a loading animation
     if(data == null) return (<SuspendedTable collums={5} rows={10}/>)
     
+    // If we searched but there was nothing show a message
     if(data.length == 0) return (<>No data available for selected filters.</>)    
 
+    /*  This is the table used to display the data  
+        We get the object keys for the table head.
+        We then loop through all the rows and create a new row in the table
+    */
     return (
         <TableContainer style={{width: "100%", overflow: "auto"}}>
             <Table stickyHeader >
@@ -82,6 +94,8 @@ export function DataTable({filter})
 
 }
 
+/* This is the element we display when loading the data
+*/
 function SuspendedTable({collums, rows})
 {
 

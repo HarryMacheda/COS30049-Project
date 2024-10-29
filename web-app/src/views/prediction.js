@@ -31,7 +31,7 @@ export function PredictionView({ filter })
             Longitude: filter.Suburb.Longitude,
             Latitude: filter.Suburb.Latitude,
             Beds: filter.Beds ? filter.Beds : 0,
-            Baths: filter.Baths ? filter.Beds : 0,
+            Baths: filter.Baths ? filter.Baths : 0,
             Parking: filter.Parks ? filter.Parks : 0,
             Type: filter.Type ? filter.Type : 0
         }

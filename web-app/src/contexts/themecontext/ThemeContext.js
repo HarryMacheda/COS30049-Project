@@ -8,7 +8,7 @@ const LIGHT = createTheme({
     palette: {
       mode: 'light',
       primary: {
-        main: "#364882"
+        main: "#364882",
       },
       secondary: {
         main: "#DC6104"

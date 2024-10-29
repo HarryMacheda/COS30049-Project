@@ -6,11 +6,11 @@ import APIClient from '../api/client';
 
 export function Filter({ filter, onChange }) {
   const [stateValues, setStateValues] = useState({
-    beds: null,
-    baths: null,
-    parking: null,
-    propertyType: "",
-    state: "",
+    Beds: 0,
+    Baths: 0,
+    Parks: 0,
+    Type: "",
+    State: "",
     suburbs: "",
     nonce: new Date().getTime(),
   });
@@ -41,14 +41,16 @@ export function Filter({ filter, onChange }) {
   };
 
   const clearFilter = () => {
-    setStateValues({...stateValues,
-      Beds: null,
-      Baths: null,
-      Parks: null,
+    const newFilter = {...{...stateValues,
+      Beds: 0,
+      Baths: 0,
+      Parks: 0,
       Type: "",
       State: "",
       nonce: new Date().getTime(),
-    });
+    }}
+    setStateValues(newFilter);
+    onChange(newFilter);
   };
 
   if (!isLoading) {
@@ -67,7 +69,7 @@ export function Filter({ filter, onChange }) {
             <TextField
               label="Bedrooms"
               type="number"
-              value={stateValues.Beds}
+              value ={stateValues.Beds}
               onChange={handleChange("Beds")}
             />
           </FormControl>
@@ -91,7 +93,7 @@ export function Filter({ filter, onChange }) {
             <InputLabel id="label-type">Property Type</InputLabel>
             <Select
               label={"Property Type"}
-              value={stateValues.propertyType}
+              value={stateValues.Type}
               labelId={"label-type"}
               onChange={handleChange("Type")}
             >

@@ -1,4 +1,4 @@
-import { Skeleton } from "@mui/material";
+import { Skeleton, Typography } from "@mui/material";
 import { useState, useEffect } from "react"
 import APIClient from "../../api/client";
 import {
@@ -111,8 +111,11 @@ export function HouseParkingGraph({filter}){
     }
 
     return (
-        <div style={{height: "200px"}}>
-            <Bar data={config.data} options={config.options} />
-        </div>
+        <>
+            <Typography>Parking</Typography>
+            <div style={{height: "200px"}}>
+                <Bar data={config.data} options={config.options} />
+            </div>
+        </>
     )
 }

@@ -1,7 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 import {useState} from 'react'
-
+import {TableChart, Psychology} from '@mui/icons-material'
 
 import {Grid, GridItem} from './components/grid/Grid'
 import {CardContent, Typography } from '@mui/material';
@@ -28,8 +28,8 @@ function App() {
     <ThemeController>
       <AppBar position="fixed" color="primary" sx={{ top: 0, bottom: 'auto' }}>   
         <Toolbar>
-         <Button color="inherit" onClick={() => setPage("data")}>Data</Button>
-         <Button color="inherit" onClick={() => setPage("model")}>Ai Model</Button>
+         <Button sx={{"&:hover": {backgroundColor: "#2a3866"}}} color={page == "data" ? "secondary" : "inherit"} onClick={() => setPage("data")}><TableChart />&emsp;Data</Button>
+         <Button sx={{"&:hover": {backgroundColor: "#2a3866"}}} color={page == "model" ? "secondary" : "inherit"} onClick={() => setPage("model")}><Psychology />&emsp;Ai Model</Button>
         </Toolbar>
       </AppBar>
       <Grid rows={isLandscape ? 2 : 4} columns={isLandscape ? 3: 1} gap={"1em"} style={{marginTop:"5%", height: "95%"}}>
@@ -40,6 +40,10 @@ function App() {
           <GridItem x={isLandscape ? 2 : 1} width={isLandscape ? 2 : 1} y={isLandscape ? 1 : 2} height={isLandscape ? 2 : 1}>
             <CardContent>
               <Typography variant="h3">Data results</Typography>
+              <Typography>This is the used to search the data that our model is based on. Controlled
+                by the filter you can verify real world data to further inform your house pricing
+                decision.
+              </Typography>
               <DataTable filter={filter}/>
             </CardContent>
           </GridItem>

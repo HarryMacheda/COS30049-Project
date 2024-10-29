@@ -21,12 +21,23 @@ export function DataTable({filter})
 
     const LoadData = async () => {
 
-        let data = await APIClient.get("/data/suburb" + (filter.Suburb ? "/" + filter.Suburb.Suburb : "")); 
+        let data = await APIClient.get("/suburbs" + (filter.Suburb ? "/" + filter.Suburb.Suburb : "")); 
         //filter data further
-        if(filter.Type || filter.Type == 0){
+        if(filter.Type){
             data = data.filter((element) => element.Type == filter.Type);
         }
 
+        if(filter.Beds){
+            data = data.filter((element) => element.Beds == filter.Beds);
+        }
+
+        if(filter.Baths){
+            data = data.filter((element) => element.Baths == filter.Baths);
+        }
+
+        if(filter.Parks){
+            data = data.filter((element) => element.Parking == filter.Parks);
+        }
 
         setData(data);
     }

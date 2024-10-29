@@ -24,3 +24,8 @@ dist
 _pycache_
 _pycache_/
 .pyc
+
+# IDE
+.DS_Store
+/backend/.idea
+/backend/__pycache__

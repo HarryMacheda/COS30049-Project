@@ -6,14 +6,21 @@ from models.clustering import Clustering
 from models.suburb_data import SuburbData
 import joblib
 
+# Main file
+# this is the starting point of the application
+# it creates the fast api sets the middleware
+# it also sets the routes the applcotion
+
+
 app = FastAPI()
 
+# Our cors middleware since the webapp is hosted on a seperate host
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["*"], #allow any origin
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["*"], # allow any method post,get ect
+    allow_headers=["*"], # allow any headers, we dont use them but still works
 )
 
 

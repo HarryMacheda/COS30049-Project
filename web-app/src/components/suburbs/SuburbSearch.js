@@ -34,14 +34,32 @@ export function SuburbSearch({ options, state, filter, onChange, nonce })
                         }
 
                         // Further filter options based on user input
-                        if (inputValue == "" || inputValue.length < 3)
+                        if (inputValue == "" || inputValue.length < 3) {
                             // If the user has not typed enough, return only the first 20 options
-                            return results.slice(0, 20)
-                        else 
+                            let seen = new Set()
+                            let uniqueResults = []
+                            for (let item of results) {
+                                if (!seen.has(item.Suburb)) {
+                                  seen.add(item.Suburb)
+                                  uniqueResults.push(item)
+                                }
+
+                                if (uniqueResults.length === 20) {
+                                  break
+                                }
+                            }
+                            results = uniqueResults
+                        } else {
                             // Filter options to match user input
                             results = results.filter((option) =>
                                 option?.Suburb?.toLowerCase().includes(inputValue.toLowerCase())
                             )
+
+                            // Remove duplicate options
+                            results = results.filter((item, index, self) => 
+                                index === self.findIndex((t) => t.Suburb === item.Suburb)
+                            )
+                        }
 
                         return results;
                     }

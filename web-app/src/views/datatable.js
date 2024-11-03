@@ -68,7 +68,7 @@ export function DataTable({filter})
         We then loop through all the rows and create a new row in the table
     */
     return (
-        <TableContainer style={{width: "100%", overflow: "auto"}}>
+        <TableContainer style={{width: "100%", maxHeight: "750px", yOverflow: "auto"}}>
             <Table stickyHeader >
                 <TableHead style={{width: "100%"}}> 
                     <TableRow style={{width: "100%"}}>

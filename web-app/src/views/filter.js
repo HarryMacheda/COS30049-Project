@@ -18,7 +18,6 @@ export function Filter({ filter, onChange }) {
   
   // State to manage loading status
   const [isLoading, setLoading] = useState(true);
-
   // Function to fetch suburb data from API and update state
   const loadSuburbs = async () => {
     const suburbData = await APIClient.get("/suburbs");

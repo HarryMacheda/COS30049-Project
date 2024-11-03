@@ -23,7 +23,10 @@ const LIGHT = createTheme({
     typography: {
         h3: {
             color: "#364882"
-        }     
+        }, 
+        h4: {
+          color: "#364882"
+      }     
     }
   });
 // Dark theme

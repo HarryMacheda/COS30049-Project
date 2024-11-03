@@ -14,7 +14,11 @@ async def regression_predict(features: RegressionPredictionRequest):
     if Regression.instance is None:
         raise HTTPException(status_code=404, detail="regression instance does not exist")
 
-    return Regression.instance.predict(features)
+    try:
+        return Regression.instance.predict(features)
+    except Exception as e: 
+        raise HTTPException(status_code=500, detail="Something went wrong: " + str(e))
+
 
 # Description route
 # simple route that returns a description of the model

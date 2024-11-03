@@ -14,9 +14,13 @@ DATA = LoadDataTable("./data/data.csv")
 async def get_suburbs():
     # check if suburbs has loaded properly
     if SuburbData.instance is None:
-        raise HTTPException(status_code=404, detail="suburbs instance does not exist")
+        raise HTTPException(status_code=404, detail="Suburbs instance does not exist")
 
-    return SuburbData.instance.data
+    try:
+        return SuburbData.instance.data
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Something went wrong: " + str(e))
+
 
 # Returns all the houses for a specific suburb
 # this is used to show users what data the model is trained on
@@ -24,4 +28,10 @@ async def get_suburbs():
 async def get_suburb(suburb: str):
     #filter the data where the subrub matches
     # orient them as records to they are a dictionary of all values
-    return DATA[DATA["Suburb"].str.lower() == suburb.lower()].to_dict(orient="records")
+    if (DATA is None):
+        raise HTTPException(status_code=404, detail="Data was not loaded")
+    
+    try:
+        return DATA[DATA["Suburb"].str.lower() == suburb.lower()].to_dict(orient="records")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Something went wrong: " + str(e))

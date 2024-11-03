@@ -8,12 +8,15 @@ router = APIRouter()
 # prediction 
 # Taks in a clustering request and returns a response object
 @router.post("/predict", response_model=ClusteringPredictionResponse)
-async def clustering_predict(features: ClusteringPredictionRequest):
-    # If we havent loaded the model the throw an error
-    if Clustering.instance is not None:
-        return Clustering.instance.predict(features)
+async def clustering_predict(features: ClusteringPredictionRequest):   
+     # If we havent loaded the model the throw an error
+    if Clustering.instance is  None:
+        raise HTTPException(status_code=404, detail="Clustering instance does not exist.")
 
-    raise HTTPException(status_code=404, detail="Regression instance does not exist.")
+    try:
+        return Clustering.instance.predict(features)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Something went wrong: " + str(e))
 
 # Description route
 # simple route that returns a description of the model

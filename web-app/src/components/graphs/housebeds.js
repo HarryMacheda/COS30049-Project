@@ -41,20 +41,26 @@ const HOUSE_BEDS = {
 */
 export function HouseBedsGraph({filter}){
     const [data, setData] = useState(null);
+    const [error, setError] = useState(null);
 
     const getAllPredictions = async () => {
         const predictions = await Promise.all(
           Object.keys(HOUSE_BEDS).map(async (x) => {
               const prediction = await getPrediction(x);
-              return { [x]: prediction };
+              if(prediction != null){
+                return { [x]: prediction };
+              }
           })
         );
     
         const newData = predictions.reduce((acc, curr) => {
-          return curr ? { ...acc, ...curr } : acc;
+            if(acc != {}){
+                return curr ? { ...acc, ...curr } : acc;
+            }
         }, {});
-    
-        setData(newData);
+        if(Object.keys(newData).length > 0){
+            setData(newData);
+        }
     };
     
     const getPrediction = async (beds) => {
@@ -68,6 +74,9 @@ export function HouseBedsGraph({filter}){
         };
 
         let prediction = await APIClient.post("/regression/predict", input);
+        if (prediction.error != null){
+            return null;
+        }
         return prediction;
     };
     

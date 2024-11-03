@@ -5,8 +5,12 @@ import { useState, useEffect } from "react";
 export function SuburbSearch({ options, state, filter, onChange, nonce })
 {
     // If no options are available, return an empty string
-    if(options == null)
+    if(options == null || options == undefined)
         return "";
+
+    if(options.error != null){
+        return <>{options.error}</>
+    }
 
     // Function to handle changes in the selected suburb value
     const handleChange = async (value) =>

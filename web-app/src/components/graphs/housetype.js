@@ -43,15 +43,21 @@ export function HouseTypeGraph({filter}){
         const predictions = await Promise.all(
             Object.keys(HOUSE_TYPES).map(async (x) => {
                 const prediction = await getPrediction(x);
-                return { [x]: prediction };
+                if(prediction != null){
+                    return { [x]: prediction };
+                  }            
             })
           );
           
-          const newData = predictions.reduce((acc, curr) => {
-            return curr ? { ...acc, ...curr } : acc;
-          }, {});
+        const newData = predictions.reduce((acc, curr) => {
+            if(acc != {}){
+                return curr ? { ...acc, ...curr } : acc;
+            }          
+        }, {});
       
-          setData(newData);
+        if(Object.keys(newData).length > 0){
+            setData(newData);
+        }
     }
 
     const getPrediction = async (type) => {
@@ -59,12 +65,15 @@ export function HouseTypeGraph({filter}){
             Longitude: filter.Suburb.Longitude,
             Latitude: filter.Suburb.Latitude,
             Beds: filter.Beds ? filter.Beds : 0,
-            Baths: filter.Baths ? filter.Beds : 0,
+            Baths: filter.Baths ? filter.Baths : 0,
             Parking: filter.Parks ? filter.Parks : 0,
             Type: type
         };
 
         let prediction = await APIClient.post("/regression/predict", input);
+        if (prediction.error != null){
+            return null;
+        }
         return prediction;
     }
 

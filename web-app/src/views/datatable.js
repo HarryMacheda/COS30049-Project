@@ -63,6 +63,7 @@ export function DataTable({filter})
     // If we searched but there was nothing show a message
     if(data.length == 0) return (<>No data available for selected filters.</>)    
 
+    if(data.error != null) return (<>{data.error}</>)
     /*  This is the table used to display the data  
         We get the object keys for the table head.
         We then loop through all the rows and create a new row in the table

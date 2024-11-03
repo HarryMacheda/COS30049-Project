@@ -11,11 +11,13 @@ export default class APIClient {
         try 
         {
             const response = await fetch(API_URL + path);
+
+            const json = await response.json();
+
             if (!response.ok) {
-              throw new Error(`Response status: ${response.status}`);
+                throw new Error(`Response status: ${response.status} ${json.detail ? json.detail : ""}`);
             }
         
-            const json = await response.json();
             return json;
         } catch (error) 
         {
@@ -38,11 +40,12 @@ export default class APIClient {
                 body: JSON.stringify(body)
             });
 
+            const json = await response.json();
+
             if (!response.ok) {
-              throw new Error(`Response status: ${response.status}`);
+              throw new Error(`Response status: ${response.status} ${json.detail ? json.detail : ""}`);
             }
         
-            const json = await response.json();
             return json;
         } catch (error) 
         {

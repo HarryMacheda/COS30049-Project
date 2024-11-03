@@ -42,15 +42,21 @@ export function HouseParkingGraph({filter}){
         const predictions = await Promise.all(
           Object.keys(HOUSE_PARKS).map(async (x) => {
               const prediction = await getPrediction(x);
-              return { [x]: prediction };
+              if(prediction != null){
+                return { [x]: prediction };
+              }
           })
         );
     
         const newData = predictions.reduce((acc, curr) => {
-          return curr ? { ...acc, ...curr } : acc;
+            if(acc != {}){
+                return curr ? { ...acc, ...curr } : acc;
+            }        
         }, {});
     
-        setData(newData);
+        if(Object.keys(newData).length > 0){
+            setData(newData);
+        }
     };
     
     const getPrediction = async (parks) => {
@@ -64,6 +70,9 @@ export function HouseParkingGraph({filter}){
         };
 
         let prediction = await APIClient.post("/regression/predict", input);
+        if (prediction.error != null){
+            return null;
+        }
         return prediction;
     };
     

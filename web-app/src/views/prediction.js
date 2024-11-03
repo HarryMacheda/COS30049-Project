@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import APIClient from '../api/client'
-import { Slider } from "@mui/material";
+import { Slider, Typography } from "@mui/material";
 import styles from './prediction.module.css'
 
 // Utility function to convert large numbers into human-readable formats 
@@ -25,6 +25,7 @@ export function PredictionView({ filter })
     // State for regression (price prediction) and clustering (scarcity level)
     const [regression, setRegression] = useState(null);
     const [clustering, setClustering] = useState(null);
+    const [error, setError] = useState(null);
 
     // Function to load predictions based on filter input
     const LoadPrediction = async () => {
@@ -40,7 +41,12 @@ export function PredictionView({ filter })
 
        // Fetch price prediction from regression API
         APIClient.post("/regression/predict", input).then((response) => {
-            setRegression(response.Prediction);
+            if (response.error != null){
+                setError(response.error);
+            }
+            else{
+                setRegression(response.Prediction);
+            }
         });
         
         // Fetch scarcity level from clustering API
@@ -59,18 +65,28 @@ export function PredictionView({ filter })
                 "1 in a million":9,
             }
 
-            setClustering({cluster: response.Prediction, order:clusters[response.Prediction] });        
+            if (response.error != null){
+                setError(response.error);
+            }
+            else {
+                setClustering({cluster: response.Prediction, order:clusters[response.Prediction] });        
+            }
         });
 
     }
 
     // Load predictions when a valid filter with a suburb is provided
     useEffect(() => {
+        setError(null);
         if(filter != undefined  && filter != null && filter.Suburb != undefined && filter.Suburb != null)
         {
-            LoadPrediction()
+            LoadPrediction();
         }
       },[filter]);
+
+    if (error != null){
+        return <>{error}</>
+    }
 
     // Display message if no suburb information is available in the filter
     if (filter.Suburb == undefined || filter.Suburb == null){
@@ -87,6 +103,7 @@ export function PredictionView({ filter })
             {regression && 
             <p className={styles.PriceDisplay}>${getPrettyNumber(regression)}</p>}
             {clustering && <div key={clustering.cluster}>
+                <Typography variant="h4">Scarcity</Typography>
                 <span>{clustering.cluster}</span>
                 {/* Slider representing the scarcity level (disabled for display purposes) */}
                 <Slider defaultValue={clustering.order} step={1} marks min={0} max={9} disabled />
